@@ -11,155 +11,125 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="SoccerBundle\Repository\UserRepository")
+ * @UniqueEntity(fields="email", message="Email already taken")
+ * @UniqueEntity(fields="username", message="Username already taken")
  */
-class User
+class User implements UserInterface
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @var string
-     *
-     * @Assert\Email
-     * @Assert\NotBlank
-     * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
     /**
-     * @var string
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     */
+    private $username;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
+
+    /**
+     * The below length depends on the "algorithm" you use for encoding
+     * the password, but this works well with bcrypt.
      *
-     * @Assert\NotBlank
-     * @Assert\Length(min = 5)
-     * @ORM\Column(name="password", type="string", length=255)
+     * @ORM\Column(type="string", length=64)
      */
     private $password;
 
-    /**
-     * @var array
-     *
-     * @ORM\Column(name="roles", type="array")
-     */
-    private $roles;
+    // other properties and methods
 
-    /**
-     * @var string
-     *
-     *@ORM\OneToMany(targetEntity="UserBundle\Entity\Review", mappedBy="user")
-     */
-    private $review;
-
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string
-     */
     public function getEmail()
     {
         return $this->email;
     }
 
-    /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return User
-     */
-    public function setPassword($password)
+    public function setEmail($email)
     {
-        $this->password = $password;
-
-        return $this;
+        $this->email = $email;
     }
 
-    /**
-     * Get password
-     *
-     * @return string
-     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
+    }
+
     public function getPassword()
     {
         return $this->password;
     }
 
-    /**
-     * Set roles
-     *
-     * @param array $roles
-     *
-     * @return User
-     */
-    public function setRoles($roles)
+    public function setPassword($password)
     {
-        $this->roles = $roles;
-
-        return $this;
+        $this->password = $password;
     }
 
+    public function getSalt()
+    {
+        // The bcrypt algorithm doesn't require a separate salt.
+        // You *may* need a real salt if you choose a different encoder.
+        return null;
+    }
+
+    // other methods, including security methods like getRoles()
+
     /**
-     * Get roles
+     * Returns the roles granted to the user.
      *
-     * @return array
+     * <code>
+     * public function getRoles()
+     * {
+     *     return array('ROLE_USER');
+     * }
+     * </code>
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     *
+     * @return (Role|string)[] The user roles
      */
     public function getRoles()
     {
-        return $this->roles;
+        // TODO: Implement getRoles() method.
     }
 
     /**
-     * Set review
+     * Removes sensitive data from the user.
      *
-     * @param string $review
-     *
-     * @return User
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
      */
-    public function setReview($review)
+    public function eraseCredentials()
     {
-        $this->review = $review;
-
-        return $this;
-    }
-
-    /**
-     * Get review
-     *
-     * @return string
-     */
-    public function getReview()
-    {
-        return $this->review;
+        // TODO: Implement eraseCredentials() method.
     }
 }
-
