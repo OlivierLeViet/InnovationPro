@@ -1,0 +1,30 @@
+DeviceBundle\Entity\Device:
+    type: entity
+    table: null
+    repositoryClass: DeviceBundle\Repository\DeviceRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: 255
+            column: Name
+        mark:
+            type: string
+            length: 255
+            column: Mark
+        price:
+            type: float
+            column: Price
+        picture:
+            type: string
+            length: 255
+            column: Picture
+        review:
+            type: array
+            column: Review
+    lifecycleCallbacks: {  }
